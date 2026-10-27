@@ -42,3 +42,31 @@ body{
     box-shadow:
         0 0 15px rgba(33,150,243,.8);
 }
+
+.current-location {
+
+    width: 18px;
+    height: 18px;
+
+    background: #2196f3;
+
+    border: 3px solid white;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 0 12px
+        rgba(
+            33,
+            150,
+            243,
+            0.15
+        ),
+        0 0 15px
+        rgba(
+            33,
+            150,
+            243,
+            0.5
+        );
+}
