@@ -9,6 +9,8 @@ L.tileLayer(
 ).addTo(map);
 
 let currentMarker = null;
+let headingCone = null;
+let currentHeading = 0;
 let headingMarker = null;
 
 let currentAlpha = 0;
@@ -53,7 +55,9 @@ navigator.geolocation.watchPosition(
 
 function updateCurrentMarker(
     lat,
-    lng
+    lng,
+    accuracy,
+    updateDirectionCone();
 ){
 
     const currentIcon =
@@ -279,3 +283,115 @@ document
         }
     }
 );
+async function startOrientation() {
+
+    if (
+        typeof DeviceOrientationEvent !== "undefined" &&
+        typeof DeviceOrientationEvent.requestPermission === "function"
+    ) {
+
+        try {
+
+            const permission =
+                await DeviceOrientationEvent.requestPermission();
+
+            if (permission !== "granted") {
+                return;
+            }
+
+        } catch (e) {
+
+            console.error(e);
+            return;
+        }
+    }
+
+    window.addEventListener(
+        "deviceorientation",
+        function(event) {
+
+            currentHeading =
+                event.webkitCompassHeading ??
+                event.alpha ??
+                0;
+
+            updateDirectionCone();
+        }
+    );
+}
+
+startOrientation();
+function updateDirectionCone() {
+
+    if (
+        !currentMarker ||
+        currentHeading === null
+    ) {
+        return;
+    }
+
+    const pos =
+        currentMarker.getLatLng();
+
+    const centerLat = pos.lat;
+    const centerLng = pos.lng;
+
+    const radius = 0.0003;
+
+    const points = [];
+
+    points.push([
+        centerLat,
+        centerLng
+    ]);
+
+    for (
+        let deg = -25;
+        deg <= 25;
+        deg += 2
+    ) {
+
+        const angle =
+            (currentHeading + deg)
+            * Math.PI
+            / 180;
+
+        const lat =
+            centerLat +
+            radius *
+            Math.cos(angle);
+
+        const lng =
+            centerLng +
+            radius *
+            Math.sin(angle);
+
+        points.push([
+            lat,
+            lng
+        ]);
+    }
+
+    points.push([
+        centerLat,
+        centerLng
+    ]);
+
+    if (headingCone) {
+
+        map.removeLayer(
+            headingCone
+        );
+    }
+
+    headingCone =
+        L.polygon(
+            points,
+            {
+                stroke: false,
+                fillColor: "#2196f3",
+                fillOpacity: 0.25
+            }
+        )
+        .addTo(map);
+}
