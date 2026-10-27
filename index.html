@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>方位センサーテスト</title>
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="sensorInfo">
+
+    <h3>スマホセンサー情報</h3>
+
+    α(方位):
+    <span id="alpha">0</span>°
+    <br>
+
+    β(前後):
+    <span id="beta">0</span>°
+    <br>
+
+    γ(左右):
+    <span id="gamma">0</span>°
+    <br>
+
+    方角 :
+    <span id="direction">
+        北
+    </span>
+
+    <br><br>
+
+    <button id="startSensor">
+        センサー開始
+    </button>
+
+</div>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="script.js"></script>
+
+</body>
+</html>
